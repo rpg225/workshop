@@ -1,90 +1,70 @@
-# Ocean Protocol Hands-On Workshop
+# Image Processing Algorithm for Ocean Protocol Workshop
 
-Welcome to the Ocean Protocol Hands-On Workshop! This workshop is designed to give you hands-on experience with Ocean Protocol's technology stack and help you build real-world applications.
+This Python script demonstrates various image processing operations using the Pillow (PIL) library. It's designed to be used as an algorithm, potentially within the Ocean Protocol ecosystem, to transform images fetched from a URL. The script has evolved to support multiple chained operations.
 
-## Workshop Schedule
+## Features / Implemented Operations
 
-### Part 1: Introduction (1:15 PM - 2:10 PM) - Open to Everyone
-- Introduction to Ocean Nodes 
-- Q&A Session 
-- Tech stack presentation and demo 
-- Tech stack Q&A Session
+The script can perform the following operations, which can be chained in any desired order:
 
-### Part 2: Hands-On Workshop (2:30 PM - 4:30 PM) - Let's build!
-- Tool Setup and Demo Algorithm Testing (20 mins)
-- Track Sorting and algorithm used explained (10 mins)
-- Algorithm Development (40 mins)
-- Deploying and Running on Ocean Nodes (15 mins)
-- Evaluation and Networking (30 mins)
+*   **`resize`**: Resizes the image to specified dimensions.
+    *   Params: `{"size": (width, height)}`
+*   **`grayscale`**: Converts the image to grayscale.
+    *   Params: None
+*   **`rotate180`**: Rotates the image by 180 degrees.
+    *   Params: None
+*   **`blur`**: Applies a Gaussian blur.
+    *   Params: `{"radius": integer}` (default: 5)
+*   **`unsharp`**: Applies an unsharp mask filter.
+    *   Params: `{"radius": integer}` (default: 5)
+*   **`blue_gradient_overlay`**: Overlays a customizable blue gradient with opacity.
+    *   Params:
+        *   `{"start_color_rgb": (r, g, b)}` (default: (0, 0, 50))
+        *   `{"end_color_rgb": (r, g, b)}` (default: (0, 100, 200))
+        *   `{"opacity_percent": integer}` (0-100, default: 50)
 
 ## Prerequisites
 
-### Required Equipment
-- Laptop (mandatory for hands-on participation)
-- VS Code installed on your laptop
-- Ocean Protocol VS Code Extension installed from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=OceanProtocol.ocean-protocol-vscode-extension)
+*   Python 3.x
+*   Pillow library: `pip install Pillow`
+*   Requests library: `pip install requests`
 
-### Repository Setup
-Before the evaluation, please ensure you have:
-1. Created a new fork of the repository
-2. Made your changes in the forked repository under the folder assigned to your track
-3. Committed and pushed your changes
+## Setup
 
-## Evaluation Criteria
+1.  Save the final Python script (provided in the previous interactions) as a `.py` file (e.g., `image_processor.py`).
+2.  Ensure the output directory (e.g., `/data/outputs/` as used in the script) exists if running in an environment that requires it (like Ocean Compute). If running locally, you might need to create it or modify the output path in the script.
 
-Your work will be evaluated by the ocean protocol team based on the following criteria (100% total):
+## Usage (Current Version - Chained Operations)
 
-- Creativity / Product Mindset (40%)
-- Extended Parameters Implementation (25%)
-- Topic-related Enhancements (25%)
-- Out-of-the-box Functionality (10%)
+To use the script:
 
-## Technical Requirements
+1.  Modify the `image_url` variable at the top of the script if you wish to process a different default image.
+2.  The core of the script's flexibility lies in the `operations_to_perform` list within the `if __name__ == "__main__":` block. This list defines the sequence of operations to be applied.
+3.  Each item in `operations_to_perform` is a dictionary:
+    *   It **must** have a `type` key specifying the operation (e.g., `"resize"`, `"grayscale"`).
+    *   It **may** have a `params` key, which is itself a dictionary containing parameters for that operation (e.g., `{"size": (300, 300)}` for resize).
 
-Coding experience is mandatory. We will provide you with a basic template to get started. Template will be available in the workshop repository.
+**Example `operations_to_perform` list:**
 
-Any questions? Our team will be available to help you throughout the workshop!
-
-## What to Expect
-
-- Hands-on experience with real-world applications
-- Prizes for outstanding work
-- Networking opportunities with like-minded individuals
-- Many more surprises!
-
-## Join Our Community
-
-[Meet Ocean: Tokenized AI & Data](https://oceanprotocol.com/)
-Stay connected with us through our community channels:
-- Telegram: [Join our Telegram group](https://t.me/+XQOKuXM0kNA3NDE0)
-- Discord: [Join our Discord server](https://discord.gg/CQ2PQnKe)
-
-Tracks:
-Price prediction real estate (track 1)
-- Zeptabot
-- Godwin woo
-- Rong kai wong
-- Youlian
-- Adam
-- Akshat
-- Shaun geer
-
-Image processing (track 2)
-- Arafat
-- Akash kumar
-- Rambod
-- Mulham
-- Anabele
-- Ben far
-- Bob
-
-Rug-pull detector (track 3)
-- Youske 
-- Daniel Silver
-- Ravi
-- Jay
-- Rakesh
-- Pevithran
-- Aarnavi
-- Johnas
-
+```python
+operations_to_perform = [
+    {
+        "type": "resize",
+        "params": {"size": (300, 300)}  # Resizes to 300x300 pixels
+    },
+    {
+        "type": "grayscale"
+        # No params needed for grayscale
+    },
+    {
+        "type": "rotate180"
+        # No params needed for rotate180
+    },
+    {
+        "type": "blue_gradient_overlay",
+        "params": {
+            "start_color_rgb": (0, 0, 80),    # A custom dark blue
+            "end_color_rgb": (50, 150, 255), # A custom lighter blue
+            "opacity_percent": 30             # 30% opacity
+        }
+    }
+]
