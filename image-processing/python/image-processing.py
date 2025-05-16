@@ -34,11 +34,11 @@ def apply_filters(image_url, filter):
     return filtered_img
 
 if __name__ == "__main__":
-    filtered_img = apply_filters(image_url=image_url, filter="grayscale") # <--- Changed to "grayscale"
-    filename = "/data/outputs/filtered_image.png"
+    filtered_img = apply_filters(image_url=image_url, filter="blur") # <--- Changed to blur
+    filename = "/data/outputs/filtered_image_blur.png"
     # It's good practice to check if filtered_img is not None before saving
     if filtered_img:
         filtered_img.save(filename)
-        print(f"Grayscale filter applied and image saved successfully as {filename}")
+        print(f"Blur filter applied and image saved successfully as {filename}")
     else:
         print("Image filtering failed. Not saving.")
