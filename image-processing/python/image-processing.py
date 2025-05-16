@@ -5,9 +5,9 @@ from PIL import Image, ImageFilter
 image_url = "https://cdn.shopify.com/s/files/1/0736/0941/2851/files/2_474f94f4-d828-4bfe-90a6-2d0b62fccc55.png?v=1739437773"
 
 
-def apply_filters(image_url, filter_type):
-    if not filter_type:
-        print("Filter type is not provided.")
+def apply_filters(image_url, operation_type, size=None): # Added 'size' parameter
+    if not operation_type:
+        print("Operation type is not provided.")
         return None
     try:
         response = requests.get(image_url, timeout=10)
@@ -22,32 +22,46 @@ def apply_filters(image_url, filter_type):
         print(f"Failed to open image from response: {e}")
         return None
 
-    processed_img = None # Renamed from filtered_img for clarity as rotation isn't strictly a "filter"
+    processed_img = None
     # Apply operation
-    if filter_type == "blur":
+    if operation_type == "blur":
         processed_img = img.filter(ImageFilter.GaussianBlur(radius=5))
-    elif filter_type == "grayscale":
+    elif operation_type == "grayscale":
         processed_img = img.convert("L")
-    elif filter_type == "unsharp":
+    elif operation_type == "unsharp":
         processed_img = img.filter(ImageFilter.UnsharpMask(radius=5))
-    elif filter_type == "rotate180":
-        # Option 1: Using transpose (often preferred for standard rotations)
+    elif operation_type == "rotate180":
         processed_img = img.transpose(Image.ROTATE_180)
-        # Option 2: Using rotate (rotates counter-clockwise, but 180 is same either way)
-        # processed_img = img.rotate(180)
+    elif operation_type == "resize": # NEW OPERATION
+        if size and isinstance(size, tuple) and len(size) == 2:
+            print(f"Resizing image to {size[0]}x{size[1]}")
+            # The resize method takes a tuple (width, height)
+            try: # Check for Pillow version for resampling argument
+                processed_img = img.resize(size, Image.Resampling.LANCZOS)
+            except AttributeError: # Older Pillow versions
+                processed_img = img.resize(size, Image.LANCZOS)
+        else:
+            print("Invalid or no size provided for resize operation. Expected (width, height) tuple.")
+            return None
     else:
-        print(f"Unknown operation/filter: {filter_type}")
+        print(f"Unknown operation/filter: {operation_type}")
         return None
 
     return processed_img
 
 if __name__ == "__main__":
-    # To output a 180-degree rotated image, set chosen_operation to "rotate180"
-    chosen_operation = "rotate180" # CHANGED HERE
-    output_img = apply_filters(image_url=image_url, filter_type=chosen_operation)
+    # --- To output a RESIZED image ---
+    chosen_operation = "resize"
+    target_size = (300, 300) # Define the target dimensions (width, height)
+    output_img = apply_filters(image_url=image_url, operation_type=chosen_operation, size=target_size) # Pass the size
+
 
     if output_img:
-        filename = f"/data/outputs/processed_{chosen_operation}_image.png" # Updated filename
+        # Make filename more descriptive for resize
+        if chosen_operation == "resize" and target_size:
+            filename = f"/data/outputs/processed_{chosen_operation}_{target_size[0]}x{target_size[1]}_image.png"
+        else:
+            filename = f"/data/outputs/processed_{chosen_operation}_image.png"
         try:
             output_img.save(filename)
             print(f"Operation '{chosen_operation}' applied and image saved successfully as {filename}")
