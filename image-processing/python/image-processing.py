@@ -2,7 +2,7 @@ import requests
 from io import BytesIO
 from PIL import Image, ImageFilter
 
-image_url = "https://raw.githubusercontent.com/mikolalysenko/lena/master/lena.png"
+image_url = "https://cdn.shopify.com/s/files/1/0736/0941/2851/files/2_474f94f4-d828-4bfe-90a6-2d0b62fccc55.png?v=1739437773"
 
 
 def apply_filters(image_url, filter):
